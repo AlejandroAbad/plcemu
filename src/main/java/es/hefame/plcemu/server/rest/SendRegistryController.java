@@ -4,13 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
-import jhefame.core.exception.APIException;
-import jhefame.http.HttpController;
-import jhefame.http.exchange.HttpConnection;
-import jhefame.http.exchange.IHttpRequest;
+import es.hefame.hcore.HException;
+import es.hefame.hcore.http.HttpController;
+import es.hefame.hcore.http.exchange.HttpConnection;
+import es.hefame.hcore.http.exchange.IHttpRequest;
 import es.hefame.plcemu.ds.ControlMessage;
 import es.hefame.plcemu.ds.ControlQueue;
-import es.hefame.plcemu.run.Server;
+import es.hefame.plcemu.Server;
 import es.hefame.plcemu.server.PlcServer;
 import es.hefame.plcemu.util.Log;
 
@@ -23,7 +23,7 @@ public class SendRegistryController extends HttpController
 	}
 
 	@Override
-	protected void get(HttpConnection exchange) throws APIException, IOException
+	protected void get(HttpConnection exchange) throws HException, IOException
 	{
 		// super.get(exchange);
 
@@ -31,10 +31,10 @@ public class SendRegistryController extends HttpController
 		IHttpRequest request = exchange.request;
 		
 		
-		String function = request.get_uri_field(1);
+		String function = request.getURIField(1);
 
 		try {
-		Log.i("Petición HTTP: " + request.get_uri().toString());
+		Log.i("Petición HTTP: " + request.getURI().toString());
 		} catch (NullPointerException e) {
 			Log.i(e.getMessage());
 		}
@@ -109,7 +109,7 @@ public class SendRegistryController extends HttpController
 
 	private void redirectHomePage(HttpConnection exchange) throws IOException
 	{
-		exchange.response.set_header("Location", "/r");
+		exchange.response.setHeader("Location", "/r");
 		exchange.response.send("<html><body><a href=\"/r\">Volver</a></body></html>", 302, "text/html");
 		
 		//queryControl(exchange);
@@ -194,7 +194,7 @@ public class SendRegistryController extends HttpController
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<pre>");
-		String txtid = exchange.request.get_uri_field(2);
+		String txtid = exchange.request.getURIField(2);
 		int id;
 		if (txtid != null)
 		{
@@ -250,7 +250,7 @@ public class SendRegistryController extends HttpController
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<pre>");
-		String seq = exchange.request.get_uri_field(2);
+		String seq = exchange.request.getURIField(2);
 		int id;
 		if (seq != null)
 		{

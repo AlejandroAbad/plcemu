@@ -1,6 +1,5 @@
 package es.hefame.plcemu.server;
 
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 

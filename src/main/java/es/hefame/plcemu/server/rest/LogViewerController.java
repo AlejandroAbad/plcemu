@@ -4,16 +4,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import jhefame.core.exception.APIException;
-import jhefame.http.HttpController;
-import jhefame.http.exchange.HttpConnection;
-import es.hefame.plcemu.run.Server;
+import es.hefame.hcore.HException;
+import es.hefame.hcore.http.HttpController;
+import es.hefame.hcore.http.exchange.HttpConnection;
+import es.hefame.plcemu.Server;
 import es.hefame.plcemu.util.Log;
 
 public class LogViewerController extends HttpController {
 
 	@Override
-	public void get(HttpConnection exchange)  throws APIException, IOException {
+	public void get(HttpConnection exchange)  throws HException, IOException {
 		
 		try {
 			

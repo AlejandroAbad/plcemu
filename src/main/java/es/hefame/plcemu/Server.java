@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import jhefame.http.HttpController;
-import jhefame.http.server.HttpService;
+import es.hefame.hcore.http.HttpController;
+import es.hefame.hcore.http.server.HttpService;
 import es.hefame.plcemu.server.PlcServer;
 import es.hefame.plcemu.server.rest.LogViewerController;
 import es.hefame.plcemu.server.rest.SendRegistryController;

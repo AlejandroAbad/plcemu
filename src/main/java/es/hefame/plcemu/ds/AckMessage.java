@@ -4,21 +4,17 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Arrays;
 
-import com.sun.xml.internal.ws.util.ByteArrayBuffer;
+import es.hefame.hcore.converter.ByteArrayConverter;
 
-import jhefame.core.C;
-
-public class AckMessage extends Message
-{
+public class AckMessage extends Message {
 
 	/**
 	 * Crea el mensaje con el tipo y número de secuencia.
 	 * 
-	 * @param type El tipo del mensaje.
+	 * @param type      El tipo del mensaje.
 	 * @param seqNumber El número de secuencia.
 	 */
-	public AckMessage(int seqNumber)
-	{
+	public AckMessage(int seqNumber) {
 		super(MessageType.A, seqNumber);
 	}
 
@@ -28,8 +24,7 @@ public class AckMessage extends Message
 	 * @param raw la trama KNAPP.
 	 * @throws Exception Si la trama KNAPP no es correcta
 	 */
-	public AckMessage(byte[] raw) throws ParseException
-	{
+	public AckMessage(byte[] raw) throws ParseException {
 		super(raw);
 	}
 
@@ -39,15 +34,13 @@ public class AckMessage extends Message
 	 * @return El mensaje ACK codificado en formato para el PLC.
 	 * @throws IOException Si algo falla.
 	 */
-	public byte[] encode() throws IOException
-	{
-		ByteArrayBuffer buffer = new ByteArrayBuffer(7);
+	public byte[] encode() throws IOException {
+		ByteBuffer buffer = new ByteBuffer(7);
 		buffer.write(STX);
 		buffer.write(this.type.code);
 		buffer.write(Message.toPaddedByteLeft(String.valueOf(seqNumber), (byte) '0', 4));
 		buffer.write(CR);
-		byte[] rt = Message.toPaddedByteRight(new String(buffer.getRawData()), (byte) 0x20, 110);
-		buffer.close();
+		byte[] rt = Message.toPaddedByteRight(new String(buffer.getBytes()), (byte) 0x20, 110);
 		return rt;
 	}
 
@@ -57,33 +50,37 @@ public class AckMessage extends Message
 	 * @see ds.Message#decode(byte[])
 	 */
 	@Override
-	protected void decode(byte[] raw) throws ParseException
-	{
+	protected void decode(byte[] raw) throws ParseException {
 		/*
-		 * STX TYPE SEQ CR
-		 * 0 1 2-5 6
+		 * STX TYPE SEQ CR 0 1 2-5 6
 		 */
-		if (raw.length < 7) { throw new ParseException(String.format("El tamaño de la trama es %s, se esperaba %s", raw.length, 7), 0); }
-		if (raw[0] != Message.STX) { throw new ParseException(String.format("El carácter inicial de la trama no es correcto. Se recibió %s", C.bytes.toHexString(new byte[] { raw[0] }, true)), 0); }
-		if (raw[6] != Message.CR) { throw new ParseException(String.format("El carácter final de la trama no es correcto. Se recibió %s", C.bytes.toHexString(new byte[] { raw[6] }, true)), 6); }
+		if (raw.length < 7) {
+			throw new ParseException(String.format("El tamaño de la trama es %s, se esperaba %s", raw.length, 7), 0);
+		}
+		if (raw[0] != Message.STX) {
+			throw new ParseException(String.format("El carácter inicial de la trama no es correcto. Se recibió %s",
+					ByteArrayConverter.toHexString(new byte[] { raw[0] }, true)), 0);
+		}
+		if (raw[6] != Message.CR) {
+			throw new ParseException(String.format("El carácter final de la trama no es correcto. Se recibió %s",
+					ByteArrayConverter.toHexString(new byte[] { raw[6] }, true)), 6);
+		}
 
 		this.type = Message.MessageType.forName(raw[1]);
-		if (type == null) { throw new ParseException(String.format("El tipo de mensaje no es válido. Se recibió %s", C.bytes.toHexString(new byte[] { raw[1] }, true)), 1); }
+		if (type == null) {
+			throw new ParseException(String.format("El tipo de mensaje no es válido. Se recibió %s",
+					ByteArrayConverter.toHexString(new byte[] { raw[1] }, true)), 1);
+		}
 
 		String seqN = new String(Arrays.copyOfRange(raw, 2, 6));
-		try
-		{
+		try {
 			this.seqNumber = Integer.valueOf(seqN);
-		}
-		catch (@SuppressWarnings("unused") NumberFormatException nfe)
-		{
-			throw new ParseException(String.format("El tipo de mensaje no es válido. Se recibió %s", Arrays.copyOfRange(raw, 2, 5)), 1);
+		} catch (@SuppressWarnings("unused") NumberFormatException nfe) {
+			throw new ParseException(
+					String.format("El tipo de mensaje no es válido. Se recibió %s", Arrays.copyOfRange(raw, 2, 5)), 1);
 		}
 
 	}
-	
-	
-	
 
 	@Override
 	public String toCSV() {
@@ -92,8 +89,7 @@ public class AckMessage extends Message
 		return sb.toString();
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("ACKNOWLEDGE");

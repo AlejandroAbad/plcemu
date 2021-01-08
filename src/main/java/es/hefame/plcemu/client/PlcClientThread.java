@@ -9,7 +9,6 @@ import es.hefame.plcemu.ds.AckMessage;
 import es.hefame.plcemu.ds.ControlMessage;
 import es.hefame.plcemu.ds.RegisterMessage;
 import es.hefame.plcemu.ds.Message.MessageType;
-import es.hefame.plcemu.server.PlcServer;
 import es.hefame.plcemu.util.Log;
 import es.hefame.plcemu.util.PrettyHex;
 import es.hefame.plcemu.util.PrettyHex.Dir;
